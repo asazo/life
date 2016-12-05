@@ -2,7 +2,7 @@
 # @Author: alejandro
 # @Date:   2016-12-04 15:52:15
 # @Last Modified by:   Alejandro Sazo
-# @Last Modified time: 2016-12-05 16:53:35
+# @Last Modified time: 2016-12-05 17:09:45
 
 import numpy as np
 import pygame as pg
@@ -25,10 +25,10 @@ class WorldSimulator:
         self.yy = np.arange(self.world.shape[1])
 
 
-    def activate(self, pos):
+    def flip(self, pos, on_off):
         """ Activate or deactivate a cell in a position """
         pos = np.array(pos) / self.cell_size
-        self.world[pos[0], pos[1]] = not self.world[pos[0], pos[1]]
+        self.world[pos[0], pos[1]] = on_off
 
 
     def draw(self, screen):
@@ -69,7 +69,7 @@ class WorldSimulator:
 pg.init()
 np.random.seed(35)
 screen_size = np.array([800, 600])
-cell_size = 50
+cell_size = 10
 screen = pg.display.set_mode(screen_size)
 pg.display.set_caption('Life')
 
@@ -84,8 +84,12 @@ while True:
         if event.type == QUIT:
             pg.quit()
             sys.exit()
-        if event.type == pg.MOUSEBUTTONUP:
-            w.activate(pg.mouse.get_pos())
+        if event.type == pg.MOUSEBUTTONDOWN:
+            b1, b2, b3 = pg.mouse.get_pressed()
+            if b1:
+                w.flip(pg.mouse.get_pos(), True)
+            if b3:
+                w.flip(pg.mouse.get_pos(), False)
 
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_e:
